@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RazorPagesMovie.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace RazorPagesMovies
 {
@@ -21,7 +23,9 @@ namespace RazorPagesMovies
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+          services.AddDbContext<MovieContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("MovieContext")));
+          services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,5 +45,5 @@ namespace RazorPagesMovies
 
             app.UseMvc();
         }
-    }
+  }
 }
