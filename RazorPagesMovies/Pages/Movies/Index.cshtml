@@ -18,6 +18,11 @@
     </select>
 
     Title: <input type="text" name="SearchString" />
+    <select asp-for="PriceFilter">
+      <option value="Lower">Lower</option>
+      <option value="Higher">Higher</option>
+    </select>
+    Price <input type="text" name="price" />
     <input type="submit" value="Filter" />
   </p>
 </form>

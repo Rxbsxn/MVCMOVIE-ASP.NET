@@ -22,8 +22,9 @@ namespace RazorPagesMovies.Pages.Movies
     public IList<Movie> Movie { get; set; }
     public SelectList Genres { get; set; }
     public string MovieGenre { get; set; }
+    public string PriceFilter { get; set; }
 
-    public async Task OnGetAsync(string movieGenre, string searchString)
+    public async Task OnGetAsync(string movieGenre, string searchString, string price, string priceFilter)
     {
       IQueryable<string> genreQuery = from m in _context.Movie
                                       orderby m.Genre
@@ -37,6 +38,16 @@ namespace RazorPagesMovies.Pages.Movies
 
       if (!String.IsNullOrEmpty(searchString))
         movies = movies.Where(s => s.Title.Contains(searchString));
+
+      if (!String.IsNullOrEmpty(price))
+        if (priceFilter == "Lower")
+        {
+          movies = movies.Where(v => v.Price <= decimal.Parse(price));
+        }
+        else if (priceFilter == "Higher")
+        {
+          movies = movies.Where(v => v.Price >= decimal.Parse(price));
+        }
 
       Genres = new SelectList(await genreQuery.Distinct().ToListAsync());
       Movie = await movies.ToListAsync();
