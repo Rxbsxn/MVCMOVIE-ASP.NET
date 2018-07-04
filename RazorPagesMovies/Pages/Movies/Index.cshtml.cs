@@ -9,20 +9,26 @@ using RazorPagesMovie.Models;
 
 namespace RazorPagesMovies.Pages.Movies
 {
-    public class IndexModel : PageModel
+  public class IndexModel : PageModel
+  {
+    private readonly RazorPagesMovie.Models.MovieContext _context;
+
+    public IndexModel(RazorPagesMovie.Models.MovieContext context)
     {
-        private readonly RazorPagesMovie.Models.MovieContext _context;
-
-        public IndexModel(RazorPagesMovie.Models.MovieContext context)
-        {
-            _context = context;
-        }
-
-        public IList<Movie> Movie { get;set; }
-
-        public async Task OnGetAsync()
-        {
-            Movie = await _context.Movie.ToListAsync();
-        }
+      _context = context;
     }
+
+    public IList<Movie> Movie { get; set; }
+
+    public async Task OnGetAsync(string searchString)
+    {
+      var movies = from m in _context.Movie
+                   select m;
+
+      if (!String.IsNullOrEmpty(searchString))
+        movies = movies.Where(s => s.Title.Contains(searchString));
+
+      Movie = await movies.ToListAsync();
+    }
+  }
 }
